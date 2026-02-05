@@ -7,6 +7,8 @@ Tasks
 		Level 2 - 4, 5, 6
 		Level 3 - 7, 8, 9
 	Sample Solutions Outline
+		Level 1–3 Robustness Tasks
+		Category Management Task
 
 
 # Tasks
@@ -332,7 +334,7 @@ Other levels are for your own practice, as to how far you wish to practice!
 
 # 🧩 Sample Solutions Outline
 
-*(For Category Task + Level 1–3 Robustness Tasks)*
+*Level 1–3 Robustness Tasks*
 
 ---
 
@@ -534,93 +536,234 @@ Other levels are for your own practice, as to how far you wish to practice!
 
 ---
 
-# 🟡 CATEGORY TASK – Solution Outline (CORE TASK)
+# 📌 Category Management Task
+
+*(Detailed Hints + File Structure + URL Plan)*
 
 ---
 
-## 1. Category Model
+## 1. Category Feature – Big Picture
 
-**Fields**
+**Who can manage categories?**
+👉 **Admin only**
 
-* id
-* name
-
----
-
-## 2. Storage Strategy
-
-**Where**
-
-* `ServletContext`
-
-**Why**
-
-* Shared application data
-* Similar to products & shopkeepers
+**Where does it fit?**
+👉 Along with Shopkeepers & Products (Admin responsibility)
 
 ---
 
-## 3. Category CRUD Flow
+## 2. URL Patterns (VERY IMPORTANT)
 
-### View Categories
+### Base URL
 
-* Servlet fetches list
-* JSP displays table
+```
+/admin/categories
+```
 
-### Add Category
+### Full URL List
 
-* GET → show form
-* POST → validate + add
-* Redirect to list
+| Purpose         | URL                           |
+| --------------- | ----------------------------- |
+| View categories | `/admin/categories`           |
+| Show add form   | `/admin/add-category` (GET)   |
+| Add category    | `/admin/add-category` (POST)  |
+| Show edit form  | `/admin/edit-category?id=1`   |
+| Update category | `/admin/update-category`      |
+| Delete category | `/admin/delete-category?id=1` |
 
-### Edit Category
+🔒 These URLs are **already protected** by:
 
-* GET → load category → show form
-* POST → update name only
+* Authentication Filter
+* Authorization Filter (ADMIN role)
 
 ---
 
-## 4. Delete Category with Dependency Check (IMPORTANT)
+## 3. Project Structure (Exact)
 
-**Rule**
+### 📁 Java Packages
 
-* Category cannot be deleted if any product uses it
+```
+src/main/java
+└── app.ecom
+    ├── servlets
+    │   └── admin
+    │       ├── CategoryListServlet.java
+    │       ├── AddCategoryServlet.java
+    │       ├── EditCategoryServlet.java
+    │       ├── UpdateCategoryServlet.java
+    │       └── DeleteCategoryServlet.java
+    │
+    └── modals
+        └── Category.java
+```
 
-**Approach**
+---
 
-1. On delete request:
+### 📁 JSP Files
 
-   * fetch product list
-   * loop products
-2. If category found in any product:
+```
+src/main/webapp/jsp/admin
+├── categories.jsp
+├── add-category.jsp
+└── edit-category.jsp
+```
 
-   * block deletion
-   * forward with error message
-3. Else:
+(Use common `header.jsp` and `footer.jsp`)
 
-   * delete category
+---
+
+## 4. Category Model (Hint Only)
+
+**Category.java**
+
+* `id`
+* `name`
+
+👉 Simple POJO with constructor + getters/setters
+
+---
+
+## 5. Storage Strategy (Critical Hint)
+
+Categories must be stored in:
+
+```
+ServletContext
+```
+
+### Attribute Name (Tell them to use ONE name)
+
+```
+"categories"
+```
+
+Type:
+
+```
+List<Category>
+```
+
+📌 Initialize this list in **ServletContextListener**, just like products & shopkeepers.
+
+---
+
+## 6. categories.jsp (View Page) – What It Should Do
+
+**Purpose**
+
+* Show all categories in table
+* Show Add / Edit / Delete actions
+
+**Columns**
+
+* ID
+* Name
+* Actions
+
+**Actions**
+
+* Edit → `/admin/edit-category?id=`
+* Delete → `/admin/delete-category?id=`
+
+---
+
+## 7. Add Category Flow (Hints)
+
+### GET `/admin/add-category`
+
+* Forward to `add-category.jsp`
+
+### POST `/admin/add-category`
+
+* Read id + name
+* Trim input
+* Check:
+
+  * ID already exists?
+* If error:
+
+  * `request.setAttribute("error", "...")`
+  * forward back to form
+* Else:
+
+  * add to list
+  * redirect to `/admin/categories`
+
+🧠 Why redirect?
+→ Avoid duplicate submission
+
+---
+
+## 8. Edit Category Flow (Hints)
+
+### GET `/admin/edit-category`
+
+* Read category ID
+* Find category from list
+* Set as request attribute
+* Forward to `edit-category.jsp`
+
+### POST `/admin/update-category`
+
+* Update **name only**
+* ID must remain unchanged
+* Redirect to `/admin/categories`
+
+---
+
+## 9. Delete Category (MOST IMPORTANT PART)
+
+### URL
+
+```
+/admin/delete-category?id=2
+```
+
+### Dependency Rule
+
+> **Category cannot be deleted if any product is using it**
+
+---
+
+### How to Check (Step-by-Step Logic)
+
+1. Fetch **products list** from `ServletContext`
+2. Loop through products
+3. If any product’s category matches:
+
+   * block delete
+   * set error message
+   * forward to `categories.jsp`
+4. If no product uses it:
+
+   * remove category
    * redirect to list
 
-**Learning**
+🧠 This simulates **foreign key constraint** (without DB)
 
+---
+
+## 10. Error Message Handling (Hint)
+
+* Use **request scope**
+* Show error at top of `categories.jsp`
+* Message should disappear on refresh
+
+---
+
+## 11. Optional UI Enhancement (Tell Them Optional)
+
+* Disable Delete button if category is in use
+* Show “In use” text instead
+
+---
+
+## 🧠 What This Task Tests
+
+* ServletContext usage
+* Cross-entity validation
+* Forward vs Redirect
 * Business rule enforcement
-* Manual referential integrity
-
----
-
-## 🧠 Instructor Evaluation Focus
-
-Look for:
-
-* Correct scope usage
-* Forward vs redirect reasoning
-* Clean separation (Servlet vs JSP)
-* Clear explanation of logic
-
----
-
-## 🎓 Strong Closing Line (Tell Students)
-
-> **“You didn’t just add features — you protected data integrity.”**
+* MVC discipline
 
 ---
