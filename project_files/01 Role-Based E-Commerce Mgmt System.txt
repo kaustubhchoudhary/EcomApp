@@ -1,0 +1,108 @@
+
+## 📘 Problem Statement
+
+### Role-Based E-Commerce Management System (In-Memory)
+
+Design and implement a *simple e-commerce management web application* using *Servlets, Filters, JSP, and HTTP Sessions*, *without using a database*.
+
+The application must support *two user roles*:
+*Admin* and *Sub-Admin*, with *role-based access control*.
+
+---
+
+## 🎯 Objective
+
+To understand and implement:
+
+* *Authentication* (login/logout)
+* *Authorization* (role-based access)
+* *Session management*
+* *Security using filters*
+* *In-memory data handling*
+
+---
+
+## 🔐 User Roles & Responsibilities
+
+### 👤 Admin
+
+* Login to the system
+* Add shopkeepers
+* Modify shopkeepers
+* Delete shopkeepers
+* View list of all shopkeepers
+* View list of products
+
+---
+
+### 👤 Sub-Admin
+
+* Login to the system
+* Add products
+* Modify products
+* Delete products
+* View list of products
+
+---
+
+## 🔒 Security Requirements
+
+* Only *authenticated users* can access protected pages.
+* *Authorization must be enforced using Filters*:
+
+  * Admin-only URLs blocked for Sub-Admin
+  * Sub-Admin-only URLs blocked for Admin
+* Unauthorized access should redirect to an *error / login page*.
+
+---
+
+## 🧠 Session Management Requirements
+
+* User login information (username, role) must be stored in *HttpSession*.
+* Session must persist across multiple requests.
+* Logout must:
+
+  * Invalidate the session
+  * Prevent browser back-button access (cache control).
+
+---
+
+## 🗂️ Data Storage Rules
+
+* No database is allowed.
+* Use *in-memory collections* (`List`, `Map`) to store:
+
+  * Users
+  * Categories
+  * Products
+  * Shopkeepers
+* Data must be shared across the application using *ServletContext*.
+
+---
+
+## 🧩 Technical Constraints
+
+* Servlets → Controller logic
+* JSP + JSTL → Display only
+* Filters → Authentication & Authorization
+* Sessions → User state
+* No frameworks (Spring, Hibernate, etc.)
+
+---
+
+## 🧠 Learning Outcome (Very Important)
+
+After completing this project, students should clearly understand:
+
+* Why sessions are needed
+* How filters secure applications
+* Difference between authentication and authorization
+* How real web applications control access
+
+---
+
+## One-line Summary
+
+> *This project shows how a web application remembers users and restricts actions based on roles.*
+
+---

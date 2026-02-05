@@ -1,0 +1,626 @@
+Table of Content:
+
+Tasks
+	Category Management Task
+	Mini Tasks
+		Level 1 - 1, 2, 3
+		Level 2 - 4, 5, 6
+		Level 3 - 7, 8, 9
+	Sample Solutions Outline
+
+
+# Tasks
+
+---
+
+## ✅ Category Management Task
+
+---
+
+## 📌 Task Title
+
+**Category Management with Dependency Check**
+
+---
+
+## 🎯 Objective
+
+Extend the existing application to support **Category CRUD** with a rule:
+
+> **A category cannot be deleted if it is associated with any product.**
+
+---
+
+## 🧩 Functional Requirements
+
+### 1. Category Entity
+
+Use the `Category` model with:
+
+* `id`
+* `name`
+
+---
+
+### 2. Admin-Only Feature
+
+* Only **Admin** can manage categories.
+* URLs must be under:
+
+  ```
+  /admin/categories/*
+  ```
+
+---
+
+### 3. Category Operations
+
+#### ✅ View Categories
+
+* Display all categories in a table
+* Show:
+
+  * ID
+  * Name
+  * Actions (Edit | Delete)
+
+---
+
+#### ✅ Add Category
+
+* Form to add a new category
+* Validate:
+
+  * ID must be unique
+  * Name cannot be empty
+
+---
+
+#### ✅ Update Category
+
+* Edit category name
+* ID must not change
+
+---
+
+#### ❌ Delete Category (With Constraint)
+
+Before deleting a category:
+
+* Check if **any product** is using that category
+* If yes:
+
+  * Do **not** delete
+  * Show message:
+
+    ```
+    Category cannot be deleted because products are associated with it.
+    ```
+
+---
+
+## 🧠 Business Rule (Core Learning)
+
+```text
+Category
+   ↑
+Product
+```
+
+> **Parent data cannot be deleted if child data exists.**
+
+This is exactly how **real databases behave**, implemented manually.
+
+---
+
+## 🔧 Hints
+
+* Store categories in `ServletContext`
+* Products already exist → reuse that list
+* While deleting:
+
+  * Loop through products
+  * Compare category name or ID
+* Use:
+
+  * `request.setAttribute()` for error messages
+  * `forward()` to show message
+
+---
+
+## 🧠 Concepts Tested
+
+| Concept                    | Used |
+| -------------------------- | ---- |
+| ServletContext             | ✅    |
+| Filters & Authorization    | ✅    |
+| CRUD flow                  | ✅    |
+| Validation logic           | ✅    |
+| Forward vs Redirect        | ✅    |
+| JSTL conditional rendering | ✅    |
+
+---
+
+## ✅ Expected Outcomes
+
+* Categories page works fully
+* Deletion is conditionally blocked
+* App does **not break**
+* UI shows proper messages
+
+---
+
+## 🔹 Mini Tasks to Make the Application More Robust
+
+### 🟢 Level 1: Very Easy (Everyone should do at least 2)
+
+#### 1. JavaScript Validation on Forms
+
+**Applies to:**
+
+* Add Product
+* Add Shopkeeper
+* Add Category
+
+**Rules:**
+
+* Fields must not be empty
+* Price must be a positive number
+* Mobile number must be 10 digits
+
+👉 Uses: **JavaScript + HTML forms**
+
+🧠 Learning:
+
+> Client-side validation improves UX.
+
+---
+
+#### 2. Prevent Duplicate ID (Server-Side)
+
+**Applies to:**
+
+* Product ID
+* Shopkeeper ID
+* Category ID
+
+**Rule:**
+
+* If ID already exists → do not add
+* Show error message on same page
+
+👉 Uses: **ServletContext + collections + forward**
+
+---
+
+#### 3. Trim & Normalize Input
+
+**Applies to all forms**
+
+**Rules:**
+
+* Trim spaces from input
+* Shopkeeper/Product/Category names should be stored in **Title Case**
+
+👉 Uses: `String.trim()`
+
+---
+
+## 🔵 Level 2: Medium (Thinking + Integration)
+
+#### 4. Disable Delete Button Conditionally
+
+**Applies to:**
+
+* Category list
+
+**Rule:**
+
+* If category is used by any product:
+
+  * Disable Delete button
+  * Or show text: *“In use”*
+
+👉 Uses: **JSTL + conditional rendering**
+
+---
+
+#### 5. Show Counts in Dashboards
+
+**Examples:**
+
+* Admin Dashboard:
+
+  * Total Shopkeepers
+  * Total Categories
+  * Total Products
+* Sub-Admin Dashboard:
+
+  * Total Products
+
+👉 Uses: **ServletContext + JSP EL**
+
+---
+
+#### 6. Confirmation Before Delete
+
+**Applies to:**
+
+* Delete Product
+* Delete Shopkeeper
+* Delete Category
+
+**Implementation:**
+
+* JavaScript `confirm()`
+
+👉 Uses: **JS + existing delete flow**
+
+---
+
+## 🔶 Level 3: Advanced but In-Scope
+
+#### 7. Friendly Error Messages (One-Time)
+
+**Rule:**
+
+* Error messages should disappear after refresh
+* Do not show old messages again
+
+👉 Hint:
+
+* Use **request scope**, not session
+
+---
+
+#### 8. Search / Filter Products
+
+**Features:**
+
+* Search by name or category
+* Filter list without DB
+
+👉 Uses:
+
+* Request parameters
+* In-memory filtering using loops
+
+---
+
+#### 9. Audit Logging (Optional)
+
+**Log:**
+
+* Username
+* URL accessed
+* Date & time
+
+**Where:**
+
+* Authentication / Authorization filter
+* Or RequestListener
+
+👉 Uses: **Filter / Listener responsibility**
+
+---
+
+## 🧠 How to Assign This (Strong Recommendation)
+
+You can say to students:
+
+> “Complete **Category CRUD** (mandatory)
+>
+> * Pick **any TWO mini tasks** from the Level 1 list.”
+
+This:
+
+* Prevents copying
+* Encourages choice
+* Makes evaluation fair
+
+---
+
+🧠 What to do?
+
+“Complete Category CRUD (mandatory)
+
+Pick any TWO mini tasks from the Level 1 list.”
+
+Other levels are for your own practice, as to how far you wish to practice!
+
+---
+
+# 🧩 Sample Solutions Outline
+
+*(For Category Task + Level 1–3 Robustness Tasks)*
+
+---
+
+## 🟢 LEVEL 1 TASKS – Solution Outline
+
+### 1. JavaScript Validation on Forms
+
+**Where**
+
+* `add-product.jsp`
+* `add-shopkeeper.jsp`
+* `add-category.jsp`
+
+**Approach**
+
+* Add `onsubmit="return validateForm()"` to `<form>`
+* Write `validateForm()` in:
+
+  * inline `<script>` OR
+  * common JS file (`js/validation.js`)
+
+**Checks**
+
+* Empty fields
+* Price > 0
+* Mobile = 10 digits
+
+**Key Learning**
+
+* Client-side validation improves UX
+* Server-side validation still required
+
+---
+
+### 2. Prevent Duplicate ID (Server-Side)
+
+**Where**
+
+* Corresponding `Add*Servlet`
+
+**Approach**
+
+* Fetch list from `ServletContext`
+* Loop through existing objects
+* If ID already exists:
+
+  * set error message in request
+  * `forward()` back to same JSP
+
+**Why `forward()`**
+
+* To show error message on same form
+* Avoid losing user input
+
+---
+
+### 3. Input Normalization
+
+**Where**
+
+* Servlet before creating object
+
+**Approach**
+
+* `trim()` all input values
+* Convert category names to:
+
+  * uppercase OR
+  * title case
+
+**Benefit**
+
+* Avoids duplicate logical values
+* Cleaner data storage
+
+---
+
+## 🔵 LEVEL 2 TASKS – Solution Outline
+
+### 4. Disable Delete Button Conditionally
+
+**Where**
+
+* `categories.jsp`
+
+**Approach**
+
+* While looping categories:
+
+  * check product list
+  * see if category is used
+* If used:
+
+  * hide or disable Delete link
+  * show text: “In use”
+
+**Tools**
+
+* JSTL `<c:if>`
+* Nested loop or helper flag
+
+---
+
+### 5. Show Counts in Dashboard
+
+**Where**
+
+* Dashboard servlets OR directly in JSP
+
+**Approach**
+
+* Get list sizes from `ServletContext`
+* Set counts as request attributes
+* Display using EL
+
+**Example Counts**
+
+* Total products
+* Total categories
+* Total shopkeepers
+
+---
+
+### 6. Delete Confirmation
+
+**Where**
+
+* Delete links (product/shopkeeper/category list)
+
+**Approach**
+
+* Add `onclick="return confirm('Are you sure?')"`
+
+**Learning**
+
+* Simple UX protection
+* No backend change required
+
+---
+
+## 🔶 LEVEL 3 TASKS – Solution Outline
+
+### 7. One-Time Friendly Error Messages
+
+**Where**
+
+* Add/Edit/Delete servlets
+
+**Approach**
+
+* Use **request scope** for messages
+* Display message in JSP
+* Message disappears on refresh
+
+**Avoid**
+
+* Storing messages in session (causes repetition)
+
+---
+
+### 8. Product Search (In-Memory)
+
+**Where**
+
+* Products list servlet
+
+**Approach**
+
+* Accept `searchTerm` from request
+* Loop through products
+* Create filtered list
+* Send filtered list to JSP
+
+**UI**
+
+* Simple search input above table
+
+---
+
+### 9. Activity Logging
+
+**Where**
+
+* Filter OR RequestListener
+
+**Approach**
+
+* Capture:
+
+  * username (from session)
+  * request URI
+  * timestamp
+* Print to console or file
+
+**Learning**
+
+* Cross-cutting concerns
+* Centralized logging
+
+---
+
+# 🟡 CATEGORY TASK – Solution Outline (CORE TASK)
+
+---
+
+## 1. Category Model
+
+**Fields**
+
+* id
+* name
+
+---
+
+## 2. Storage Strategy
+
+**Where**
+
+* `ServletContext`
+
+**Why**
+
+* Shared application data
+* Similar to products & shopkeepers
+
+---
+
+## 3. Category CRUD Flow
+
+### View Categories
+
+* Servlet fetches list
+* JSP displays table
+
+### Add Category
+
+* GET → show form
+* POST → validate + add
+* Redirect to list
+
+### Edit Category
+
+* GET → load category → show form
+* POST → update name only
+
+---
+
+## 4. Delete Category with Dependency Check (IMPORTANT)
+
+**Rule**
+
+* Category cannot be deleted if any product uses it
+
+**Approach**
+
+1. On delete request:
+
+   * fetch product list
+   * loop products
+2. If category found in any product:
+
+   * block deletion
+   * forward with error message
+3. Else:
+
+   * delete category
+   * redirect to list
+
+**Learning**
+
+* Business rule enforcement
+* Manual referential integrity
+
+---
+
+## 🧠 Instructor Evaluation Focus
+
+Look for:
+
+* Correct scope usage
+* Forward vs redirect reasoning
+* Clean separation (Servlet vs JSP)
+* Clear explanation of logic
+
+---
+
+## 🎓 Strong Closing Line (Tell Students)
+
+> **“You didn’t just add features — you protected data integrity.”**
+
+---

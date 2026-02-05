@@ -1,0 +1,176 @@
+
+# 🧱 Step-by-Step Build Plan
+
+### Role-Based E-Commerce App (Sessions + Security, In-Memory)
+
+---
+
+## 🔹 STEP 0: Decide Scope & Rules (Mental Setup)
+
+* No database
+* In-memory data only
+* Two roles: **ADMIN**, **SUB_ADMIN**
+* Security via **Filters**
+* User identity via **HttpSession**
+
+👉 This keeps the goal clear.
+
+---
+
+## 🔹 STEP 1: Project & Folder Setup
+
+* Create Dynamic Web Project
+* Configure Tomcat
+* Create basic structure:
+
+  * `/jsp/`
+  * `/servlet/`
+  * `/filter/`
+  * `/model/`
+* Create `login.jsp` and `error.jsp`
+
+👉 No logic yet, only structure.
+
+---
+
+## 🔹 STEP 2: Define Model Classes
+
+Create simple POJOs:
+
+* `User` (username, password, role)
+* `Product`
+* `Category`
+* `Shopkeeper`
+
+👉 Just data holders, no logic.
+
+---
+
+## 🔹 STEP 3: In-Memory Data Initialization
+
+* Create collections:
+
+  * users list (admin + sub-admin)
+  * products list
+  * categories list
+  * shopkeepers list
+* Store them in **ServletContext**
+* Initialize them at app startup
+
+👉 This replaces the database.
+
+---
+
+## 🔹 STEP 4: Login (Authentication)
+
+* Create `LoginServlet`
+* Read username & password
+* Validate against in-memory users
+* On success:
+
+  * create `HttpSession`
+  * store `username` and `role`
+* Redirect to dashboard
+
+👉 User identity established.
+
+---
+
+## 🔹 STEP 5: Logout + Cache Control
+
+* Create `LogoutServlet`
+* Invalidate session
+* Set cache-control headers
+* Redirect to login page
+
+👉 Proper session cleanup.
+
+---
+
+## 🔹 STEP 6: Authentication Filter
+
+* Create `AuthFilter`
+* Intercept all protected URLs
+* Check:
+
+  * session exists?
+  * user attribute present?
+* If not → redirect to login
+
+👉 No unauthenticated access.
+
+---
+
+## 🔹 STEP 7: Authorization Filter (Role Check)
+
+* Extend filter logic
+* Check user role from session
+* Allow / deny based on URL pattern
+
+  * `/admin/*`
+  * `/subadmin/*`
+* Redirect to access-denied page
+
+👉 Role-based security enforced.
+
+---
+
+## 🔹 STEP 8: Admin Functionalities
+
+(Admin-only URLs)
+
+* Add category
+* Add / modify / delete shopkeepers
+* View shopkeepers list
+* View products list
+
+👉 Uses Servlet + JSP + JSTL.
+
+---
+
+## 🔹 STEP 9: Sub-Admin Functionalities
+
+(Sub-admin-only URLs)
+
+* Change own password
+* Add / modify / delete products
+* View product list
+
+👉 Role difference becomes visible.
+
+---
+
+## 🔹 STEP 10: JSP + JSTL Cleanup
+
+* Replace scriptlets with JSTL where possible
+* Use:
+
+  * `<c:out>`
+  * `<c:forEach>`
+  * `<c:if>`
+* Keep JSP as **view only**
+
+👉 MVC discipline reinforced.
+
+---
+
+## 🔹 STEP 11: End-to-End Flow Testing
+
+* Try:
+
+  * Access without login
+  * Wrong role access
+  * Logout + back button
+* Verify filters & sessions work
+
+👉 Concepts fully validated.
+
+---
+
+## 🧠 Teaching Anchor (Very Important)
+
+Use this sentence repeatedly:
+
+> **Session answers “who you are”, filter answers “what you can do”.**
+
+---

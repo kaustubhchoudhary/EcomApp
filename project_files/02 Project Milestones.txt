@@ -1,0 +1,160 @@
+
+# 📘 Project Milestones
+
+### Role-Based E-Commerce Management System (In-Memory)
+
+---
+
+## 🧩 Milestone 1: Basic Project Setup
+
+*Goal:* Application skeleton
+
+* Create Dynamic Web Project
+* Configure Tomcat
+* Create basic folder structure
+* Create home page + login page (JSP)
+
+✔ No security yet
+✔ Just navigation works
+
+---
+
+## 🧩 Milestone 2: In-Memory Data Setup
+
+*Goal:* Replace database with memory
+
+* Create in-memory collections for:
+
+  * Users (admin, sub-admin)
+  * Products
+  * Categories
+  * Shopkeepers
+* Store collections in *ServletContext*
+
+✔ Data shared across app
+✔ Data lost on server restart (expected)
+
+---
+
+## 🧩 Milestone 3: Login (Authentication)
+
+*Goal:* Identify the user
+
+* Create LoginServlet
+* Validate username & password from in-memory users
+* Create `HttpSession`
+* Store:
+
+  * username
+  * role (ADMIN / SUB_ADMIN)
+* Redirect to role-specific dashboard
+
+✔ Session created
+✔ User is “logged in”
+
+---
+
+## 🧩 Milestone 4: Logout + Cache Control
+
+*Goal:* Secure logout
+
+* Implement LogoutServlet
+* Call `session.invalidate()`
+* Set cache-control headers
+* Redirect to login page
+
+✔ Back button should not show secure pages
+
+---
+
+## 🧩 Milestone 5: Authentication Filter
+
+*Goal:* Protect application
+
+* Create AuthFilter
+* Check:
+
+  * Is session present?
+  * Is user logged in?
+* If not → redirect to login
+
+✔ No unauthenticated access
+
+---
+
+## 🧩 Milestone 6: Authorization Filter (Role-Based)
+
+*Goal:* Control permissions
+
+* Extend filter logic:
+
+  * Admin-only URLs
+  * Sub-admin-only URLs
+* Block unauthorized roles
+* Redirect to access-denied page
+
+✔ Role-based security enforced
+
+---
+
+## 🧩 Milestone 7: Admin Features
+
+*Goal:* Admin-only operations
+
+* Add / modify / delete shopkeepers
+* Add categories
+* View shopkeepers list
+* View products list
+
+✔ Admin URLs protected by filter
+
+---
+
+## 🧩 Milestone 8: Sub-Admin Features
+
+*Goal:* Sub-admin-only operations
+
+* Change own password
+* Add / modify / delete products
+* View product list
+
+✔ Sub-admin URLs protected by filter
+
+---
+
+## 🧩 Milestone 9: JSP + JSTL Integration
+
+*Goal:* Clean UI layer
+
+* Display lists using `<c:forEach>`
+* Use `<c:out>` for safe output
+* Avoid Java logic in JSP
+
+✔ MVC discipline reinforced
+
+---
+
+## 🧩 Milestone 10: Final Flow Validation
+
+*Goal:* Confidence & clarity
+
+* Verify:
+
+  * Login → dashboard
+  * Unauthorized URL access blocked
+  * Session maintained across requests
+  * Logout clears access
+* Discuss:
+
+  * Why sessions are needed
+  * Why filters are required
+
+✔ Conceptual clarity achieved
+
+---
+
+## 🧠 Teaching One-Liner (Use This)
+
+> *Each milestone adds exactly one missing capability to the application.*
+
+---
